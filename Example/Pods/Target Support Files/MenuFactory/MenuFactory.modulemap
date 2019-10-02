@@ -1,0 +1,6 @@
+framework module MenuFactory {
+  umbrella header "MenuFactory-umbrella.h"
+
+  export *
+  module * { export * }
+}
