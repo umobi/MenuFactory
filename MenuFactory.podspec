@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MenuFactory'
-  s.version          = '1.0.0-beta1'
+  s.version          = '1.0.0'
   s.summary          = 'MenuFactory helps creating menuCells and providing the correct actions for onTouch methods'
 
 # This description is used to generate tags and improve search results.
