@@ -8,13 +8,13 @@
 
 import Foundation
 
-public class Validate {
+public struct Validate {
     private let function: () -> Bool
-    
+
     public init(_ function: @escaping () -> Bool) {
         self.function = function
     }
-    
+
     public var isValid: Bool {
         return self.function()
     }
