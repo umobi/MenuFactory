@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MenuFactory'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'MenuFactory helps creating menuCells and providing the correct actions for onTouch methods'
 
 # This description is used to generate tags and improve search results.
@@ -24,14 +24,14 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/umobi/MenuFactory'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'brennobemoura' => 'brennobemoura@outlook.com' }
+  s.author           = { 'brennobemoura' => 'brenno@umobi.com.br' }
   s.source           = { :git => 'https://github.com/umobi/MenuFactory.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
   s.swift_version = "5.1"
 
-  s.source_files = 'MenuFactory/Classes/**/*'
+  s.source_files = 'Sources/MenuFactory/**/*'
   
   # s.resource_bundles = {
   #   'MenuFactory' => ['MenuFactory/Assets/*.png']
