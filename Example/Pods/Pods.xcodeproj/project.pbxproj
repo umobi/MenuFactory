@@ -31,11 +31,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0CE355692342A24D00F09B47 /* MenuPresentStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuPresentStyle.swift; path = MenuFactory/Classes/MenuPresentStyle.swift; sourceTree = "<group>"; };
-		0CE3556A2342A24D00F09B47 /* MenuValidate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuValidate.swift; path = MenuFactory/Classes/MenuValidate.swift; sourceTree = "<group>"; };
-		0CE3556B2342A24D00F09B47 /* MenuPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuPayload.swift; path = MenuFactory/Classes/MenuPayload.swift; sourceTree = "<group>"; };
-		0CE355712342A27C00F09B47 /* MenuAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuAction.swift; path = MenuFactory/Classes/MenuAction.swift; sourceTree = "<group>"; };
-		0CE355732342A28600F09B47 /* MenuFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuFactory.swift; path = MenuFactory/Classes/MenuFactory.swift; sourceTree = "<group>"; };
+		0CE355692342A24D00F09B47 /* MenuPresentStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuPresentStyle.swift; sourceTree = "<group>"; };
+		0CE3556A2342A24D00F09B47 /* MenuValidate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuValidate.swift; sourceTree = "<group>"; };
+		0CE3556B2342A24D00F09B47 /* MenuPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuPayload.swift; sourceTree = "<group>"; };
+		0CE355712342A27C00F09B47 /* MenuAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuAction.swift; sourceTree = "<group>"; };
+		0CE355732342A28600F09B47 /* MenuFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuFactory.swift; sourceTree = "<group>"; };
 		0DA9D37B8DF0FFC2B3FA68AF0AC36008 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		147CEBB6904CD6AE1AE1E897E5AAC7CF /* Pods-MenuFactory_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-MenuFactory_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		22B24EDE7CDC3BF16B639B6591B47CE9 /* Pods-MenuFactory_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MenuFactory_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -158,7 +158,7 @@
 				97CBD014B22A47061277D0FB6A3A71EE /* Support Files */,
 			);
 			name = MenuFactory;
-			path = ../..;
+			path = ../../Sources/MenuFactory;
 			sourceTree = "<group>";
 		};
 		C7DF6460316F01DC335A132BECAC7554 /* Targets Support Files */ = {
