@@ -1,6 +1,0 @@
-use_frameworks!
-target 'MenuFactory_Tests' do
-  pod 'MenuFactory', :path => '../'
-  
-  
-end

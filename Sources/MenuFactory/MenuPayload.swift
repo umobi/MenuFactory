@@ -21,38 +21,30 @@
 //
 
 import Foundation
-import UIKit
+import SwiftUI
 
-struct MenuPayload {
-    let action: Action
-    
+struct PrimitiveMenuPayload {
     let title: String?
-    let image: UIImage?
-    let tintColor: UIColor?
+    let image: Image?
+    let tintColor: Color?
     
     let validates: [Validate]
-    
-    let accessory: (type: UITableViewCell.AccessoryType, validate: Validate)
     
     let object: Any?
     
     init() {
-        self.action = .never
         self.title = nil
         self.image = nil
         self.tintColor = nil
         self.validates = []
-        self.accessory = (.none, .true)
         self.object = nil
     }
 
-    private init(_ original: MenuPayload, editable: Editable) {
-        self.action = editable.action
+    private init(_ original: PrimitiveMenuPayload, editable: Editable) {
         self.title = editable.title
         self.image = editable.image
         self.tintColor = editable.tintColor
         self.validates = editable.validates
-        self.accessory = editable.accessory
         self.object = editable.object
     }
 
@@ -63,27 +55,39 @@ struct MenuPayload {
     }
 
     class Editable {
-        var action: Action
-
         var title: String?
-        var image: UIImage?
-        var tintColor: UIColor?
+        var image: Image?
+        var tintColor: Color?
 
         var validates: [Validate]
 
-        var accessory: (type: UITableViewCell.AccessoryType, validate: Validate)
-
         var object: Any?
 
-        fileprivate init(_ payload: MenuPayload) {
-            self.action = payload.action
+        fileprivate init(_ payload: PrimitiveMenuPayload) {
             self.title = payload.title
             self.image = payload.image
             self.tintColor = payload.tintColor
             self.validates = payload.validates
-            self.accessory = payload.accessory
             self.object = payload.object
         }
     }
+}
 
+struct ComplexMenuPayload<Action> {
+    let title: String?
+    let image: Image?
+    let tintColor: Color?
+    let validates: [Validate]
+    let object: Any?
+
+    let action: Action
+
+    init(_ payload: PrimitiveMenuPayload, action: Action) {
+        self.title = payload.title
+        self.image = payload.image
+        self.tintColor = payload.tintColor
+        self.validates = payload.validates
+        self.object = payload.object
+        self.action = action
+    }
 }

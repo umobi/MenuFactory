@@ -21,106 +21,113 @@
 //
 
 import Foundation
+import SwiftUI
+
+protocol ViewAction {
+    func body(content: AnyView) -> AnyView
+}
+
+public struct MenuModifier: ViewModifier {
+    let action: ViewAction
+
+    init(_ action: ViewAction) {
+        self.action = action
+    }
+
+    public func body(content: Content) -> some View {
+        action.body(content: AnyView(content))
+    }
+}
+
+struct Push: ViewAction {
+    let content: () -> AnyView
+
+    init(_ content: @escaping () -> AnyView) {
+        self.content = content
+    }
+
+    func body(content: AnyView) -> AnyView {
+        AnyView(NavigationLink(destination: self.content()) {
+            content
+        })
+    }
+}
+
+@available(tvOS, unavailable)
+struct SheetPresent: ViewAction {
+    let content: (Binding<Bool>) -> AnyView
+
+    init(_ content: @escaping (Binding<Bool>) -> AnyView) {
+        self.content = content
+    }
+
+    func body(content: AnyView) -> AnyView {
+        let isPresented: State<Bool> = .init(wrappedValue: false)
+
+        return AnyView(content.onTapGesture {
+            isPresented.wrappedValue = true
+        }
+        .sheet(isPresented: isPresented.projectedValue) {
+            self.content(isPresented.projectedValue)
+        })
+    }
+}
+
+@available(tvOS, unavailable)
+struct ActionCallback: ViewAction {
+    let action: () -> Void
+
+    init(_ action: @escaping () -> Void) {
+        self.action = action
+    }
+
+    func body(content: AnyView) -> AnyView {
+        AnyView(content.onTapGesture {
+            action()
+        })
+    }
+}
+
+#if os(iOS) || os(tvOS)
 import UIKit
 
-public protocol MenuActionType {
-    func perform(on viewController: UIViewController!)
+protocol ViewControllerAction {
+    func perform(on viewController: UIViewController)
 }
 
-public enum Action {
-    case viewController(ViewController)
-    case callback(Callback)
-    case never
+struct PushView: ViewControllerAction {
+    let content: () -> UIViewController
 
-    public func perform(on viewController: UIViewController!) {
-        switch self {
-        case .viewController(let manager):
-            manager.perform(on: viewController)
-        case .callback(let manager):
-            manager.perform(on: viewController)
-        case .never:
-            return
-        }
+    init(_ content: @escaping () -> UIViewController) {
+        self.content = content
+    }
+
+    func perform(on viewController: UIViewController) {
+        viewController.navigationController?.pushViewController(content(), animated: true)
     }
 }
 
-public extension Action {
-    struct Callback: MenuActionType {
-        private let handler: (UIViewController) -> Void
+struct PresentView: ViewControllerAction {
+    let content: () -> UIViewController
 
-        public init(_ handler: @escaping (UIViewController) -> Void) {
-            self.handler = handler
-        }
+    init(_ content: @escaping () -> UIViewController) {
+        self.content = content
+    }
 
-        public func perform(on viewController: UIViewController!) {
-            self.handler(viewController)
-        }
+    func perform(on viewController: UIViewController) {
+        viewController.present(viewController, animated: true, completion: nil)
     }
 }
 
-public extension Action {
-    struct ViewController: MenuActionType {
-        let dynamic: () -> UIViewController
-        let onPresentation: ((UIViewController) -> UIViewController)?
-        public let transition: TransitionHandler
+struct ActionCallbackUI: ViewControllerAction {
+    let action: (UIViewController) -> Void
 
-        public init(dynamic: @escaping () -> UIViewController, onPresentation: ((UIViewController) -> UIViewController)? = nil) {
-            self.dynamic = dynamic
-            self.onPresentation = onPresentation
-            self.transition = .modal
-        }
+    init(_ action: @escaping (UIViewController) -> Void) {
+        self.action = action
+    }
 
-        private init(_ original: ViewController, handler: TransitionHandler) {
-            self.dynamic = original.dynamic
-            self.onPresentation = original.onPresentation
-            self.transition = handler
-        }
-
-        public func with(handler: TransitionHandler) -> ViewController {
-            return ViewController(self, handler: handler)
-        }
-
-        private func viewController() -> UIViewController {
-            let vc = self.dynamic()
-            if let onPresentation = self.onPresentation {
-                return onPresentation(vc)
-            }
-
-            return vc
-        }
-
-        public func perform(on viewController: UIViewController!) {
-            let child = self.viewController()
-            self.transition.perform(on: viewController, transition: child)
-        }
+    func perform(on viewController: UIViewController) {
+        self.action(viewController)
     }
 }
-
-public extension Action.ViewController {
-    struct TransitionHandler: TransitionType {
-        public typealias Parent = UIViewController
-        public typealias Child = UIViewController
-
-        public let rawValue: String
-        public let handler: (UIViewController, UIViewController) -> Void
-
-        public init(_ rawValue: String, _ handler: @escaping (UIViewController, UIViewController) -> Void) {
-            self.rawValue = rawValue
-            self.handler = handler
-        }
-    }
-}
-
-public extension Action.ViewController.TransitionHandler {
-    static var modal: Action.ViewController.TransitionHandler {
-        return .init("modal", { parent, child in
-            parent.present(child, animated: true, completion: nil)
-        })
-    }
-
-    static var push: Action.ViewController.TransitionHandler {
-        return .init("push", { parent, child in
-            parent.navigationController?.pushViewController(child, animated: true)
-        })
-    }
-}
+#endif

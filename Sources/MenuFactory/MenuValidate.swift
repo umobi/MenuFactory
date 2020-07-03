@@ -39,3 +39,13 @@ public extension Validate {
         return .init({ true })
     }
 }
+
+extension Array where Element == Validate {
+    var isValid: Bool {
+        if self.count == 0 {
+            return true
+        }
+
+        return self.allSatisfy { return $0.isValid }
+    }
+}

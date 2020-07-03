@@ -21,34 +21,42 @@
 //
 
 import Foundation
-import UIKit
+import SwiftUI
 
-public struct MenuFactory {
-    private let payload: MenuPayload
+public protocol PrimitiveMenuFactory {
+    var isEnabled: Bool { get }
+    var title: String? { get }
+    var tintColor: Color? { get }
+    var image: Image? { get }
+    var object: Any? { get }
+}
+
+public struct MenuFactory: PrimitiveMenuFactory {
+    fileprivate let payload: PrimitiveMenuPayload
 
     public init(title: String) {
-        self.init(MenuPayload().edit {
+        self.init(PrimitiveMenuPayload().edit {
             $0.title = title
         })
     }
 
-    private init(_ payload: MenuPayload) {
+    private init(_ payload: PrimitiveMenuPayload) {
         self.payload = payload
     }
 
-    private func edit(_ edit: @escaping (MenuPayload.Editable) -> Void) -> Self {
+    private func edit(_ edit: @escaping (PrimitiveMenuPayload.Editable) -> Void) -> Self {
         return .init(payload.edit {
             edit($0)
         })
     }
 
-    public func with(tintColor: UIColor) -> Self {
+    public func with(tintColor: Color) -> Self {
         return self.edit {
             $0.tintColor = tintColor
         }
     }
 
-    public func with(image: UIImage?) -> Self {
+    public func with(image: Image?) -> Self {
         return self.edit {
             $0.image = image
         }
@@ -66,18 +74,8 @@ public struct MenuFactory {
         }
     }
 
-    public func accessory(type: UITableViewCell.AccessoryType, with validate: Validate = .true) -> Self {
-        return self.edit {
-            $0.accessory = (type, validate)
-        }
-    }
-
     public var isValid: Bool {
-        if self.payload.validates.count == 0 {
-            return true
-        }
-
-        return self.payload.validates.allSatisfy { return $0.isValid }
+        self.payload.validates.isValid
     }
 
     public var isEnabled: Bool {
@@ -88,41 +86,61 @@ public struct MenuFactory {
         return self.payload.title
     }
 
-    public var tintColor: UIColor? {
+    public var tintColor: Color? {
         return self.payload.tintColor
     }
 
-    public var image: UIImage? {
+    public var image: Image? {
         return self.payload.image
-    }
-
-    public var accessoryType: UITableViewCell.AccessoryType? {
-        return self.payload.accessory.validate.isValid ? self.payload.accessory.type : nil
     }
 
     public var object: Any? {
         return self.payload.object
     }
 
-    public func action(menuAction: Action) -> Self {
-        return self.edit {
-            $0.action = menuAction
-        }
-    }
-
-    public var action: Action {
-        return self.payload.action
+    public func action<Action>(_ menuAction: Action) -> ComplexMenuFactory<Action> {
+        return ComplexMenuFactory(
+            self,
+            action: menuAction
+        )
     }
 }
 
-public extension MenuFactory {
-    func pushViewController(_ dynamic: @escaping () -> UIViewController) -> Self {
-        return self.action(menuAction: .viewController(Action.ViewController(
-            dynamic: dynamic
-        ).with(handler: .push)))
+public struct ComplexMenuFactory<Action>: PrimitiveMenuFactory {
+    let payload: ComplexMenuPayload<Action>
+
+    fileprivate init(_ menuFactory: MenuFactory, action: Action) {
+        self.payload = .init(
+            menuFactory.payload,
+            action: action
+        )
     }
 
-    func callback(_ handler: @escaping (UIViewController) -> Void) -> Self {
-        return self.action(menuAction: .callback(.init(handler)))
+    public var isValid: Bool {
+        self.payload.validates.isValid
+    }
+
+    public var isEnabled: Bool {
+        return self.isValid
+    }
+
+    public var title: String? {
+        return self.payload.title
+    }
+
+    public var tintColor: Color? {
+        return self.payload.tintColor
+    }
+
+    public var image: Image? {
+        return self.payload.image
+    }
+
+    public var object: Any? {
+        return self.payload.object
+    }
+
+    public var action: Action {
+        self.payload.action
     }
 }
